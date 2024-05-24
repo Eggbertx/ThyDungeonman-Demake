@@ -1,0 +1,6 @@
+tmp/
+*.o
+*.prg
+*.po
+*.jar
+.vscode/settings/

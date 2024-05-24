@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "CC65 Apple II",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/share/cc65/include"
+            ],
+            "defines": [
+                "__CC65__",
+                "__APPLE2__"
+            ],
+            "compilerPath": "/usr/bin/cl65",
+            "cStandard": "c99",
+            "intelliSenseMode": "${default}",
+            "configurationProvider": "none"
+        }
+    ],
+    "version": 4
+}
