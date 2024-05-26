@@ -5,7 +5,7 @@
 
 #define SCREEN_WIDTH 40
 #define SCREEN_HEIGHT 24
-#define TITLE_X  13
+#define TITLE_X 13
 #define FACE_X 11
 #define SWORD_X FACE_X + 15
 #define TITLE_DRAWING_Y 3
@@ -16,12 +16,17 @@
 #define SOUTH 2
 #define DENNIS 3
 
-unsigned char started = 0;
+#define FLAG_STARTED 1
+#define FLAG_SCROLL 2
+#define FLAG_GOING 4 // used by look(), if set, look command was used, otherwise go was assumed to be used
+#define GET_FLAG(f) (flags & f) == f
+#define SET_FLAG(f) flags |= f
+
+unsigned char flags = 0;
+
 signed short score = 0;
 unsigned char flaskGets = 0;
-unsigned char gotScroll = 0;
 unsigned char location = MAIN_HALL;
-unsigned char lookOrGoMsg = 0; // used by look(), if 0, look command was used, otherwise go was assumed to be used
 char input[PROMPT_CAP];
 
 void parsePrompt();
@@ -102,6 +107,7 @@ unsigned char doGet() {
 				);
 				doPrompt();
 				parsePrompt();
+				return 0;
 			} else {
 				score -= 1000;
 				printf(
@@ -110,7 +116,6 @@ unsigned char doGet() {
 					"was a load-bearing FLASK.\n"
 					"Your score was %d", score
 				);
-				getchar();
 				return 0;
 			}
 		}
@@ -156,7 +161,7 @@ void parsePrompt() {
 			doPrompt();
 			parsePrompt();
 		}
-		goto done;
+		return;
 	}
 
 	if(strncmp("go ", input, 3) == 0) {
@@ -166,7 +171,7 @@ void parsePrompt() {
 			doPrompt();
 			parsePrompt();
 		}
-		goto done;
+		return;
 	}
 
 	if(strcmp("die", input) == 0) {
@@ -174,8 +179,6 @@ void parsePrompt() {
 		clear();
 		printf("That wasn't very smart.\nYour score was %d\n\n", score);
 	}
-
-	done:
 	return;
 }
 
@@ -184,20 +187,20 @@ void parsePrompt() {
 void look() {
 	switch(location) {
 	case MAIN_HALL:
-		if(!started)
+		if(!GET_FLAG(FLAG_STARTED))
 			puts("THY DUNGEONMAN\n\nYOU ARE THY DUNGEONMAN\n\n");
+		SET_FLAG(FLAG_STARTED);
 
 		printf("Ye find yeself in yon dungeon. ");
 		
-		if(gotScroll)
-			puts("Back yonder there is a FLASK. ");
-		else
-			puts("Ye see a SCROLL. Behind ye SCROLL is a FLASK.");
+		puts(GET_FLAG(FLAG_SCROLL)?
+			"Back yonder there is a FLASK. ":
+			"Ye see a SCROLL. Behind ye SCROLL is a FLASK.");
 
-		printf("Obvious exits are NORTH, SOUTH, and DENNIS.");
+		puts("Obvious exits are NORTH, SOUTH, and DENNIS.");
 		break;
 	case NORTH:
-		cputs(lookOrGoMsg?
+		cputs(GET_FLAG(FLAG_GOING)?
 			"Ye thou now be at parapets. ":
 			"You go NORTH through yon corridor. You arraive at parapets. ");
 		puts("Ye see a ROPE.\nObvious exits are SOUTH.");
