@@ -12,13 +12,20 @@ TARGET_PATH := $(shell cl65 --print-target-path)/$(TARGET)/util/loader.system
 build:
 	cl65 -t $(TARGET) -o $(PRG) main.c
 
-disk: build get-template
+disk: require-apple2 build get-template
 	cp $(TEMPLATE_PO) $(DISK)
 	$(AC) -p $(DISK) $(DISK_BIN).system sys < $(TARGET_PATH)
 	$(AC) -as $(DISK) $(DISK_BIN) bin <$(PRG)
 
 clean:
 	rm -rf *.o *.prg *.po tmp/
+
+require-apple2:
+ifneq ($(TARGET), apple2)
+ifneq ($(TARGET), apple2enh)
+	$(error TARGET must be 'apple2' or 'apple2enh' in order to build a ProDOS disk, got $(TARGET))
+endif
+endif
 
 tmp/$(AC_JAR):
 	mkdir -p tmp/
