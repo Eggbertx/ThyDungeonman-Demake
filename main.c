@@ -21,10 +21,12 @@ signed short score = 0;
 unsigned char flaskGets = 0;
 unsigned char gotFlask = 0;
 unsigned char location = MAIN_HALL;
+char input[PROMPT_CAP];
 
 void yonTitleScreen() {
 	unsigned char i;
 	clrscr();
+	cursor(0);
 	cputsxy(TITLE_X, 1, "Thy Dungeonman");
 
 	// draw the face
@@ -47,19 +49,37 @@ void yonTitleScreen() {
 	cputsxy(SWORD_X, i+3, "oo");
 
 	cputsxy(2, i+9, "Press any key to enter yon Dungeon");
-	cursor(0);
 }
 
-void doPrompt(char** input) {
+void doPrompt() {
+	char ch = 0;
+	unsigned char promptPtr = 0;
 	memset(input, 0, PROMPT_CAP);
 	gotoxy(0, SCREEN_HEIGHT-2);
 	puts("What wouldst thou deau?");
 	cputc('>');
+	cursor(1);
+	while(1) {
+		if(promptPtr >= PROMPT_CAP)
+			continue;
+		ch = cgetc();
+		if(ch == 10 || ch == 13)
+			break; // new line
+		if(ch == 8 && promptPtr > 0) {
+			input[--promptPtr] = 0;
+			cputc(' ');
+			gotox(promptPtr+1);
+			cputc(' ');
+			gotox(promptPtr+1);
+		} else {
+			input[promptPtr++] = ch;
+			cputc(ch);
+		}
+	}
+	memset(input + promptPtr, 0, PROMPT_CAP);
 }
 
 void look() {
-	clrscr();
-	gotoxy(0, 0);
 	switch (location)
 	{
 	case MAIN_HALL:
@@ -80,14 +100,13 @@ void look() {
 }
 
 int main() {
-	// char input[25];
-	char* input = (char*)malloc(PROMPT_CAP);
 	yonTitleScreen();
-	getchar();
+	cgetc();
 	do {
+		clrscr();
+		gotoxy(0, 0);
 		look();
-		doPrompt(&input);
-		getchar();
+		doPrompt();
 	} while(score > -1);
 	getchar();
 	return 0;
