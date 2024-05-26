@@ -21,7 +21,10 @@ signed short score = 0;
 unsigned char flaskGets = 0;
 unsigned char gotScroll = 0;
 unsigned char location = MAIN_HALL;
+unsigned char lookOrGoMsg = 0; // used by look(), if 0, look command was used, otherwise go was assumed to be used
 char input[PROMPT_CAP];
+
+void parsePrompt();
 
 void clear() {
 	clrscr();
@@ -84,12 +87,33 @@ void doPrompt() {
 	memset(input + promptPtr, 0, PROMPT_CAP);
 }
 
-void doGet() {
+unsigned char doGet() {
 	char* getting = input + 4;
-	char getCmp = 1;
 
 	switch(location) {
 	case MAIN_HALL:
+		if(strcmp("flask", getting) == 0 || strcmp("ye flask", getting) == 0 || strcmp("the flask", getting) == 0) {
+			clear();
+			if(++flaskGets < 3) {
+				score++;
+				puts(
+					"You cannot get the FLASK. It is firmly bolted to a wall which is firmly bolted to "
+					"the rest of the dungeon which is probably bolted to a castle. Never you mind."
+				);
+				doPrompt();
+				parsePrompt();
+			} else {
+				score -= 1000;
+				printf(
+					"Okay, okay. You unbolt yon FLASK and hold it aloft. A great shaking begins. The "
+					"dungeon ceiling collapses down upon you, crushing you in twain. Apparently this "
+					"was a load-bearing FLASK.\n"
+					"Your score was %d", score
+				);
+				getchar();
+				return 0;
+			}
+		}
 		break;
 	case NORTH:
 		break;
@@ -98,17 +122,61 @@ void doGet() {
 	case DENNIS:
 		break;
 	}
+
+	return 1;
+}
+
+unsigned char doGo() {
+	char* goingTo = input + 3;
+
+	switch(location) {
+	case MAIN_HALL:
+		if(strcmp("north", goingTo) == 0) {
+			location = NORTH;
+			return 0;
+		}
+		break;
+	case NORTH:
+		break;
+	case SOUTH:
+		break;
+	case DENNIS:
+		break;
+	}
+	return 1;
 }
 
 void parsePrompt() {
-	char inputCmp = 1;
 	strlower(input);
-	printf("\nInput: '%s'\n", input);
-	inputCmp = strncmp("get ", input, 4);
-	if(inputCmp == 0) {
-		doGet();
+
+	if(strncmp("get ", input, 4) == 0) {
+		if(doGet() != 0) {
+			clear();
+			puts("Thou cannotst get that. Quit making stuffeth up!");
+			doPrompt();
+			parsePrompt();
+		}
+		goto done;
 	}
-	getchar();
+
+	if(strncmp("go ", input, 3) == 0) {
+		if(doGo() != 0) {
+			clear();
+			puts("Thou cannotst go there. Who do thou think thou art? A magistrate?!");
+			doPrompt();
+			parsePrompt();
+		}
+		goto done;
+	}
+
+	if(strcmp("die", input) == 0) {
+		score -= 100;
+		clear();
+		printf("That wasn't very smart.\nYour score was %d\n\n", score);
+	}
+
+	done:
+	return;
 }
 
 
@@ -128,7 +196,12 @@ void look() {
 
 		printf("Obvious exits are NORTH, SOUTH, and DENNIS.");
 		break;
-	
+	case NORTH:
+		cputs(lookOrGoMsg?
+			"Ye thou now be at parapets. ":
+			"You go NORTH through yon corridor. You arraive at parapets. ");
+		puts("Ye see a ROPE.\nObvious exits are SOUTH.");
+		break;
 	default:
 		break;
 	}
