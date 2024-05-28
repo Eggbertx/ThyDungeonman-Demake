@@ -98,33 +98,6 @@ void parsePrompt() {
 	return;
 }
 
-void doLook() {
-	CLEAR();
-	switch(location) {
-	case MAIN_HALL:
-		if(!GET_FLAG(FLAG_STARTED))
-			puts("THY DUNGEONMAN\n\nYOU ARE THY DUNGEONMAN\n\n");
-		SET_FLAG(FLAG_STARTED);
-
-		printf("Ye find yeself in yon dungeon. ");
-		
-		puts(GET_FLAG(FLAG_SCROLL)?
-			"Back yonder there is a FLASK. ":
-			"Ye see a SCROLL. Behind ye SCROLL is a FLASK.");
-
-		puts("Obvious exits are NORTH, SOUTH, and DENNIS.");
-		break;
-	case NORTH:
-		cputs(GET_FLAG(FLAG_GOING)?
-			"Ye thou now be at parapets. ":
-			"You go NORTH through yon corridor. You arraive at parapets. ");
-		puts("Ye see a ROPE.\nObvious exits are SOUTH.");
-		break;
-	default:
-		break;
-	}
-}
-
 int main() {
 	yonTitleScreen();
 	cgetc();
