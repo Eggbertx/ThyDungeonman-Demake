@@ -67,10 +67,9 @@ void doPrompt() {
 
 void parsePrompt() {
 	strlower(input);
-
+	CLEAR();
 	if(strncmp("get ", input, 4) == 0) {
 		if(doGet() != 0) {
-			CLEAR();
 			puts("Thou cannotst get that. Quit making stuffeth up!");
 		}
 		return;
@@ -78,7 +77,6 @@ void parsePrompt() {
 
 	if(strncmp("go ", input, 3) == 0) {
 		if(doGo() != 0) {
-			CLEAR();
 			puts("Thou cannotst go there. Who do thou think thou art? A magistrate?!");
 		}
 		return;
@@ -86,9 +84,17 @@ void parsePrompt() {
 
 	if(strcmp("die", input) == 0) {
 		score -= 100;
-		CLEAR();
 		printf("That wasn't very smart.\nYour score was %d\n\n", score);
+		return;
 	}
+
+	if(strcmp("look", input) == 0) {
+		UNSET_FLAG(FLAG_GOING);
+		doLook();
+		return;
+	}
+
+	puts("That does not computeth. Type HELP if thou needs of it.");
 	return;
 }
 

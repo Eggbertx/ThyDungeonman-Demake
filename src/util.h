@@ -21,6 +21,7 @@
 #define FLAG_GOING 4 // used by doLook(), if set, look command was used, otherwise go was assumed to be used
 #define GET_FLAG(f) (flags & f) == f
 #define SET_FLAG(f) flags |= f
+#define UNSET_FLAG(f) flags &= (~f)
 
 extern unsigned char flags;
 extern signed short score;

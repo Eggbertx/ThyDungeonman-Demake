@@ -9,8 +9,8 @@ unsigned char doGet() {
 
 	switch(location) {
 	case MAIN_HALL:
+		CLEAR();
 		if(strcmp("flask", getting) == 0 || strcmp("ye flask", getting) == 0 || strcmp("the flask", getting) == 0) {
-			CLEAR();
 			if(++flaskGets < 3) {
 				score++;
 				puts(
@@ -28,6 +28,15 @@ unsigned char doGet() {
 				);
 				return 0;
 			}
+		} else if(strcmp("scroll", getting) == 0) {
+			SET_FLAG(FLAG_SCROLL);
+			puts(
+				"Ye takes the SCROLL and reads of it. It doth say:\n\n"
+				"BEWARE READER OF YE SCROLL,\n"
+				"DANGERS AWAIT TO THE -\n\n"
+				"The SCROLL disappears in thy hands with ye olde ZAP!"
+			);
+			return 0;
 		}
 		break;
 	case NORTH:
