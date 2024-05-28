@@ -8,9 +8,10 @@ TEMPLATE_PO := tmp/template.po
 AC_JAR := AppleCommander-ac-1.9.0.jar
 AC := java -jar tmp/$(AC_JAR)
 TARGET_PATH := $(shell cl65 --print-target-path)/$(TARGET)/util/loader.system
+SOURCES := src/util.c src/commands.c src/main.c
 
 build:
-	cl65 -t $(TARGET) -o $(PRG) main.c
+	cl65 -t $(TARGET) -o $(PRG) $(SOURCES)
 
 disk: require-apple2 build get-template
 	cp $(TEMPLATE_PO) $(DISK)

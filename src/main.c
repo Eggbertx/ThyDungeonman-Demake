@@ -3,42 +3,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define SCREEN_WIDTH 40
-#define SCREEN_HEIGHT 24
-#define TITLE_X 13
-#define FACE_X 11
-#define SWORD_X FACE_X + 15
-#define TITLE_DRAWING_Y 3
-#define PROMPT_CAP 25
-
-#define MAIN_HALL 0
-#define NORTH 1
-#define SOUTH 2
-#define DENNIS 3
-
-#define FLAG_STARTED 1
-#define FLAG_SCROLL 2
-#define FLAG_GOING 4 // used by look(), if set, look command was used, otherwise go was assumed to be used
-#define GET_FLAG(f) (flags & f) == f
-#define SET_FLAG(f) flags |= f
-
-unsigned char flags = 0;
-
-signed short score = 0;
-unsigned char flaskGets = 0;
-unsigned char location = MAIN_HALL;
-char input[PROMPT_CAP];
+#include "util.h"
+#include "commands.h"
 
 void parsePrompt();
 
-void clear() {
-	clrscr();
-	gotoxy(0, 0);
-}
-
 void yonTitleScreen() {
 	unsigned char i;
-	clear();
+	CLEAR();
 	cputsxy(TITLE_X, 1, "Thy Dungeonman");
 
 	// draw the face
@@ -92,99 +64,36 @@ void doPrompt() {
 	memset(input + promptPtr, 0, PROMPT_CAP);
 }
 
-unsigned char doGet() {
-	char* getting = input + 4;
-
-	switch(location) {
-	case MAIN_HALL:
-		if(strcmp("flask", getting) == 0 || strcmp("ye flask", getting) == 0 || strcmp("the flask", getting) == 0) {
-			clear();
-			if(++flaskGets < 3) {
-				score++;
-				puts(
-					"You cannot get the FLASK. It is firmly bolted to a wall which is firmly bolted to "
-					"the rest of the dungeon which is probably bolted to a castle. Never you mind."
-				);
-				doPrompt();
-				parsePrompt();
-				return 0;
-			} else {
-				score -= 1000;
-				printf(
-					"Okay, okay. You unbolt yon FLASK and hold it aloft. A great shaking begins. The "
-					"dungeon ceiling collapses down upon you, crushing you in twain. Apparently this "
-					"was a load-bearing FLASK.\n"
-					"Your score was %d", score
-				);
-				return 0;
-			}
-		}
-		break;
-	case NORTH:
-		break;
-	case SOUTH:
-		break;
-	case DENNIS:
-		break;
-	}
-
-	return 1;
-}
-
-unsigned char doGo() {
-	char* goingTo = input + 3;
-
-	switch(location) {
-	case MAIN_HALL:
-		if(strcmp("north", goingTo) == 0) {
-			location = NORTH;
-			return 0;
-		}
-		break;
-	case NORTH:
-		break;
-	case SOUTH:
-		break;
-	case DENNIS:
-		break;
-	}
-	return 1;
-}
 
 void parsePrompt() {
 	strlower(input);
 
 	if(strncmp("get ", input, 4) == 0) {
 		if(doGet() != 0) {
-			clear();
+			CLEAR();
 			puts("Thou cannotst get that. Quit making stuffeth up!");
-			doPrompt();
-			parsePrompt();
 		}
 		return;
 	}
 
 	if(strncmp("go ", input, 3) == 0) {
 		if(doGo() != 0) {
-			clear();
+			CLEAR();
 			puts("Thou cannotst go there. Who do thou think thou art? A magistrate?!");
-			doPrompt();
-			parsePrompt();
 		}
 		return;
 	}
 
 	if(strcmp("die", input) == 0) {
 		score -= 100;
-		clear();
+		CLEAR();
 		printf("That wasn't very smart.\nYour score was %d\n\n", score);
 	}
 	return;
 }
 
-
-
-void look() {
+void doLook() {
+	CLEAR();
 	switch(location) {
 	case MAIN_HALL:
 		if(!GET_FLAG(FLAG_STARTED))
@@ -213,9 +122,8 @@ void look() {
 int main() {
 	yonTitleScreen();
 	cgetc();
+	doLook();
 	do {
-		clear();
-		look();
 		doPrompt();
 		parsePrompt();
 	} while(score > -1);
