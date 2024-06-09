@@ -88,7 +88,7 @@ void parsePrompt() {
 		return;
 	}
 
-	if(strcmp("look", input) == 0) {
+	if(strcmp("look", input) == 0 || strcmp("help", input) == 0) {
 		UNSET_FLAG(FLAG_GOING);
 		doLook();
 		return;
