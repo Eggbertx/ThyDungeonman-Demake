@@ -11,10 +11,20 @@
 #define TITLE_DRAWING_Y 3
 #define PROMPT_CAP 25
 
-#define MAIN_HALL 0
-#define NORTH 1
-#define SOUTH 2
-#define DENNIS 3
+#define UNSET_LOCATION 0
+#define MAIN_HALL 1
+#define NORTH 2
+#define SOUTH 3
+#define DENNIS 4
+
+#define THING_NOTHING 0
+#define THING_UNKNOWN 1
+#define THING_PARAPETS 2
+#define THING_DENNIS 3
+#define THING_JIMBERJAM 4
+#define THING_ROPE 5
+#define THING_FLASK 6
+#define THING_SCROLL 7
 
 #define FLAG_STARTED 1
 #define FLAG_SCROLL 2

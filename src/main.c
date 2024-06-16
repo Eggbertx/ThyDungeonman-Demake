@@ -6,10 +6,8 @@
 #include "util.h"
 #include "commands.h"
 
-void parsePrompt();
-
 void yonTitleScreen() {
-	unsigned char i;
+	unsigned char i = 5;
 	CLEAR();
 	cputsxy(TITLE_X, 1, "Thy Dungeonman");
 
@@ -25,14 +23,14 @@ void yonTitleScreen() {
 
 	// draw the sword
 	cputsxy(SWORD_X, 4, "/\\");
-	for(i = 5; i < 10; i++)
-		cputsxy(SWORD_X, i, "!!");
+	while(i < 10)
+		cputsxy(SWORD_X, i++, "!!");
 	cputsxy(SWORD_X-2, i, "o_!!_o");
-	cputsxy(SWORD_X-2, i+1, "\\----/");
-	cputsxy(SWORD_X, i+2, "!!");
-	cputsxy(SWORD_X, i+3, "oo");
+	cputsxy(SWORD_X-2, ++i, "\\----/");
+	cputsxy(SWORD_X, ++i, "!!");
+	cputsxy(SWORD_X, ++i, "oo");
 
-	cputsxy(2, i+9, "Press any key to enter yon Dungeon");
+	cputsxy(2, i+6, "Press any key to enter yon Dungeon");
 }
 
 void doPrompt() {
@@ -65,47 +63,49 @@ void doPrompt() {
 }
 
 
-void parsePrompt() {
+unsigned char parsePrompt() {
 	strlower(input);
 	CLEAR();
 	if(strncmp("get ", input, 4) == 0) {
 		if(doGet() != 0) {
 			puts("Thou cannotst get that. Quit making stuffeth up!");
 		}
-		return;
+		return 1;
 	}
 
 	if(strncmp("go ", input, 3) == 0) {
 		if(doGo() != 0) {
 			puts("Thou cannotst go there. Who do thou think thou art? A magistrate?!");
 		}
-		return;
+		return 1;
 	}
 
 	if(strcmp("die", input) == 0) {
 		score -= 100;
 		printf("That wasn't very smart.\nYour score was %d\n\n", score);
-		return;
+		return 0;
 	}
 
 	if(strcmp("look", input) == 0 || strcmp("help", input) == 0) {
 		UNSET_FLAG(FLAG_GOING);
 		doLook();
-		return;
+		return 1;
 	}
 
 	puts("That does not computeth. Type HELP if thou needs of it.");
-	return;
+
+	return 1;
 }
 
 int main() {
+	unsigned char alive = 0;
 	yonTitleScreen();
 	cgetc();
 	doLook();
 	do {
 		doPrompt();
-		parsePrompt();
-	} while(score > -1);
+		alive = parsePrompt();
+	} while(alive == 1);
 	getchar();
 	return 0;
 }

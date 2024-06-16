@@ -72,6 +72,34 @@ unsigned char doGo() {
 	return 1;
 }
 
+// assumes we've already validated the location
+void lookAt(unsigned char thing) {
+	switch(thing) {
+	case THING_PARAPETS:
+		puts("Well, they're parapets. This much we know for sure.");
+		break;
+	case THING_DENNIS:
+		puts("That jimberjam really makes the outfit.");
+	case THING_JIMBERJAM:
+		puts("Man, that art a nice jimberjam.");
+		break;
+	case THING_ROPE:
+		puts("It looks okay. You've seen better.");
+		break;
+	case THING_FLASK:
+		puts("Looks like you could quaff some serious mead out of that thing.");
+		break;
+	case THING_SCROLL:
+		puts(GET_FLAG(FLAG_SCROLL)?
+			"Ye seeth nothing wheretofore it went ZAP.":
+			"Parchment, definitely parchment. I'd recognize it anywhere.");
+		break;
+	default:
+		puts("It looketh pretty awesome.");
+		break;
+	}
+}
+
 void doLook() {
 	CLEAR();
 	switch(location) {
