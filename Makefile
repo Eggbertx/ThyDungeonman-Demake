@@ -19,7 +19,7 @@ disk: require-apple2 build get-template
 	$(AC) -as $(DISK) $(DISK_BIN) bin <$(PRG)
 
 clean:
-	rm -rf *.o *.prg *.po tmp/
+	rm -rf src/*.o *.prg *.po tmp/
 
 require-apple2:
 ifneq ($(TARGET), apple2)
