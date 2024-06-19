@@ -28,7 +28,8 @@
 
 #define FLAG_STARTED 1
 #define FLAG_SCROLL 2
-#define FLAG_GOING 4 // used by doLook(), if set, look command was used, otherwise go was assumed to be used
+#define FLAG_BAUBEL 4
+#define FLAG_GOING 8 // used by doLook(), if set, look command was used, otherwise go was assumed to be used
 #define GET_FLAG(f) (flags & f) == f
 #define SET_FLAG(f) flags |= f
 #define UNSET_FLAG(f) flags &= (~f)

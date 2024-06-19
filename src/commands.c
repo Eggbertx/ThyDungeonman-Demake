@@ -29,13 +29,19 @@ unsigned char doGet() {
 				return 0;
 			}
 		} else if(strcmp("scroll", getting) == 0) {
-			SET_FLAG(FLAG_SCROLL);
-			puts(
-				"Ye takes the SCROLL and reads of it. It doth say:\n\n"
-				"BEWARE READER OF YE SCROLL,\n"
-				"DANGERS AWAIT TO THE -\n\n"
-				"The SCROLL disappears in thy hands with ye olde ZAP!"
-			);
+			if(GET_FLAG(FLAG_SCROLL)) {
+				score--;
+				puts("Ye doth suffer from memory loss. YE SCROLL is no more. Honestly.");
+			} else {
+				SET_FLAG(FLAG_SCROLL);
+				puts(
+					"Ye takes the SCROLL and reads of it. It doth say:\n\n"
+					"BEWARE READER OF YE SCROLL,\n"
+					"DANGERS AWAIT TO THE -\n\n"
+					"The SCROLL disappears in thy hands with ye olde ZAP!"
+				);
+				score += 2;
+			}
 			return 0;
 		}
 		break;
