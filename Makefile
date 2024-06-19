@@ -9,6 +9,7 @@ AC_JAR := AppleCommander-ac-1.9.0.jar
 AC := java -jar tmp/$(AC_JAR)
 TARGET_PATH := $(shell cl65 --print-target-path)/$(TARGET)/util/loader.system
 SOURCES := src/util.c src/commands.c src/main.c
+LINAPPLE := linapple
 
 build:
 	cl65 -t $(TARGET) -o $(PRG) $(SOURCES)
@@ -17,6 +18,9 @@ disk: require-apple2 build get-template
 	cp $(TEMPLATE_PO) $(DISK)
 	$(AC) -p $(DISK) $(DISK_BIN).system sys < $(TARGET_PATH)
 	$(AC) -as $(DISK) $(DISK_BIN) bin <$(PRG)
+
+buildandrun: disk
+	$(LINAPPLE) --d1 $(DISK) -b
 
 clean:
 	rm -rf src/*.o *.prg *.po tmp/
