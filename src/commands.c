@@ -7,9 +7,13 @@
 unsigned char doGet() {
 	char* getting = input + 4;
 
+	if(strcmp("graphics", getting) == 0) {
+		puts("Graphics shmaphics...for sooth!");
+		return 1;
+	}
+
 	switch(location) {
 	case LOCATION_DUNGEON:
-		CLEAR();
 		if(strcmp("flask", getting) == 0 || strcmp("ye flask", getting) == 0 || strcmp("the flask", getting) == 0) {
 			if(++flaskGets < 3) {
 				score++;
@@ -65,37 +69,37 @@ unsigned char doGo() {
 	case LOCATION_DUNGEON:
 		if(strcmp("north", goingTo) == 0) {
 			doGoOrLook(LOCATION_NORTH);
-			return 0;
+			return 1;
 		}
 		if(strcmp("south", goingTo) == 0) {
 			doGoOrLook(LOCATION_SOUTH);
-			return 0;
+			return 1;
 		}
 		if(strcmp("dennis", goingTo) == 0) {
 			doGoOrLook(LOCATION_DENNIS);
-			return 0;
+			return 1;
 		}
 		break;
 	case LOCATION_NORTH:
 		if(strcmp("south", goingTo) == 0) {
 			doGoOrLook(LOCATION_DUNGEON);
-			return 0;
+			return 1;
 		}
 		break;
 	case LOCATION_SOUTH:
 		if(strcmp("north", goingTo) == 0) {
 			doGoOrLook(LOCATION_DUNGEON);
-			return 0;
+			return 1;
 		}
 		break;
 	case LOCATION_DENNIS:
 		if(strcmp("not dennis", goingTo) == 0) {
 			doGoOrLook(LOCATION_DUNGEON);
-			return 0;
+			return 1;
 		}
 		break;
 	}
-	return 1;
+	return 0;
 }
 
 // assumes we've already validated the location

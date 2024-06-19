@@ -66,6 +66,7 @@ void doPrompt() {
 unsigned char parsePrompt() {
 	strlower(input);
 	CLEAR();
+
 	if(strncmp("get ", input, 4) == 0) {
 		if(!doGet()) {
 			puts("Thou cannotst get that. Quit making stuffeth up!");
@@ -97,8 +98,18 @@ unsigned char parsePrompt() {
 		return 1;
 	}
 
-	puts("That does not computeth. Type HELP if thou needs of it.");
+	if(strncmp("graphics", input, 9) == 0) {
+		puts("Graphics shmaphics...for sooth!");
+		return 1;
+	}
 
+	if(strcmp("smell", input) == 0) {
+		puts("You smell a Wumpus.");
+		return 1;
+	}
+
+invalid:
+	puts("That does not computeth. Type HELP if thou needs of it.");
 	return 1;
 }
 
