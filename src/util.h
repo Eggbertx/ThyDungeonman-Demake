@@ -11,11 +11,11 @@
 #define TITLE_DRAWING_Y 3
 #define PROMPT_CAP 25
 
-#define UNSET_LOCATION 0
-#define MAIN_HALL 1
-#define NORTH 2
-#define SOUTH 3
-#define DENNIS 4
+#define LOCATION_UNSET 0
+#define LOCATION_DUNGEON 1
+#define LOCATION_NORTH 2
+#define LOCATION_SOUTH 3
+#define LOCATION_DENNIS 4
 
 #define THING_NOTHING 0
 #define THING_UNKNOWN 1
@@ -27,9 +27,9 @@
 #define THING_SCROLL 7
 
 #define FLAG_STARTED 1
-#define FLAG_SCROLL 2
-#define FLAG_BAUBEL 4
-#define FLAG_GOING 8 // used by doLook(), if set, look command was used, otherwise go was assumed to be used
+#define FLAG_DEAD 2
+#define FLAG_SCROLL 4
+#define FLAG_BAUBEL 8
 #define GET_FLAG(f) (flags & f) == f
 #define SET_FLAG(f) flags |= f
 #define UNSET_FLAG(f) flags &= (~f)

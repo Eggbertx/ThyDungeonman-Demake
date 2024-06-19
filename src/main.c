@@ -67,14 +67,14 @@ unsigned char parsePrompt() {
 	strlower(input);
 	CLEAR();
 	if(strncmp("get ", input, 4) == 0) {
-		if(doGet() != 0) {
+		if(doGet()) {
 			puts("Thou cannotst get that. Quit making stuffeth up!");
 		}
-		return 1;
+		return GET_FLAG(FLAG_DEAD)?0:1;
 	}
 
 	if(strncmp("go ", input, 3) == 0) {
-		if(doGo() != 0) {
+		if(doGo()) {
 			puts("Thou cannotst go there. Who do thou think thou art? A magistrate?!");
 		}
 		return 1;
@@ -87,8 +87,13 @@ unsigned char parsePrompt() {
 	}
 
 	if(strcmp("look", input) == 0 || strcmp("help", input) == 0) {
-		UNSET_FLAG(FLAG_GOING);
-		doLook();
+		doGoOrLook(location);
+		return 1;
+	}
+
+	if(strcmp("not dennis", input) == 0 && location == LOCATION_DENNIS) {
+		// for compatibility with the main game, since "go dennis" works but "go not dennis" doesn't for some reason
+		doGoOrLook(LOCATION_DUNGEON);
 		return 1;
 	}
 
@@ -101,7 +106,7 @@ int main() {
 	unsigned char alive = 0;
 	yonTitleScreen();
 	cgetc();
-	doLook();
+	doGoOrLook(location);
 	do {
 		doPrompt();
 		alive = parsePrompt();

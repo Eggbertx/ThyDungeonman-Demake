@@ -3,7 +3,7 @@
 
 unsigned char doGo();
 
-void doLook();
+void doGoOrLook(unsigned char newLoc);
 
 unsigned char doGet();
 

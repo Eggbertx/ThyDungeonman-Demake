@@ -8,7 +8,7 @@ unsigned char doGet() {
 	char* getting = input + 4;
 
 	switch(location) {
-	case MAIN_HALL:
+	case LOCATION_DUNGEON:
 		CLEAR();
 		if(strcmp("flask", getting) == 0 || strcmp("ye flask", getting) == 0 || strcmp("the flask", getting) == 0) {
 			if(++flaskGets < 3) {
@@ -26,6 +26,7 @@ unsigned char doGet() {
 					"was a load-bearing FLASK.\n"
 					"Your score was %d", score
 				);
+				SET_FLAG(FLAG_DEAD);
 				return 0;
 			}
 		} else if(strcmp("scroll", getting) == 0) {
@@ -45,11 +46,11 @@ unsigned char doGet() {
 			return 0;
 		}
 		break;
-	case NORTH:
+	case LOCATION_NORTH:
 		break;
-	case SOUTH:
+	case LOCATION_SOUTH:
 		break;
-	case DENNIS:
+	case LOCATION_DENNIS:
 		break;
 	}
 
@@ -61,18 +62,37 @@ unsigned char doGo() {
 	char* goingTo = input + 3;
 
 	switch(location) {
-	case MAIN_HALL:
+	case LOCATION_DUNGEON:
 		if(strcmp("north", goingTo) == 0) {
-			location = NORTH;
-			doLook();
+			doGoOrLook(LOCATION_NORTH);
+			return 0;
+		}
+		if(strcmp("south", goingTo) == 0) {
+			doGoOrLook(LOCATION_SOUTH);
+			return 0;
+		}
+		if(strcmp("dennis", goingTo) == 0) {
+			doGoOrLook(LOCATION_DENNIS);
 			return 0;
 		}
 		break;
-	case NORTH:
+	case LOCATION_NORTH:
+		if(strcmp("south", goingTo) == 0) {
+			doGoOrLook(LOCATION_DUNGEON);
+			return 0;
+		}
 		break;
-	case SOUTH:
+	case LOCATION_SOUTH:
+		if(strcmp("north", goingTo) == 0) {
+			doGoOrLook(LOCATION_DUNGEON);
+			return 0;
+		}
 		break;
-	case DENNIS:
+	case LOCATION_DENNIS:
+		if(strcmp("not dennis", goingTo) == 0) {
+			doGoOrLook(LOCATION_DUNGEON);
+			return 0;
+		}
 		break;
 	}
 	return 1;
@@ -106,13 +126,21 @@ void lookAt(unsigned char thing) {
 	}
 }
 
-void doLook() {
+// if newLoc == location, look was used, otherwise go <location> was used
+void doGoOrLook(unsigned char newLoc) {
 	CLEAR();
-	switch(location) {
-	case MAIN_HALL:
-		if(!GET_FLAG(FLAG_STARTED))
+	switch(newLoc) {
+	case LOCATION_DUNGEON:
+		if(!GET_FLAG(FLAG_STARTED)) {
+			SET_FLAG(FLAG_STARTED);
 			puts("THY DUNGEONMAN\n\nYOU ARE THY DUNGEONMAN\n\n");
-		SET_FLAG(FLAG_STARTED);
+		} else if(location == LOCATION_NORTH) {
+			puts("You go SOUTH back through yon corridor.");
+		} else if(location == LOCATION_SOUTH) {
+			puts("You go NORTH.");
+		} else if(location == LOCATION_DENNIS) {
+			puts("You go NOT DENNIS.");
+		}
 
 		printf("Ye find yeself in yon dungeon. ");
 		
@@ -122,8 +150,8 @@ void doLook() {
 
 		puts("Obvious exits are NORTH, SOUTH, and DENNIS.");
 		break;
-	case NORTH:
-		cputs(GET_FLAG(FLAG_GOING)?
+	case LOCATION_NORTH:
+		cputs((location == newLoc)?
 			"Ye thou now be at parapets. ":
 			"You go NORTH through yon corridor. You arrive at parapets. ");
 		puts("Ye see a ROPE.\nObvious exits are SOUTH.");
@@ -131,4 +159,5 @@ void doLook() {
 	default:
 		break;
 	}
+	location = newLoc;
 }
