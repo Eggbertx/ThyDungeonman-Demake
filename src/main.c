@@ -36,6 +36,7 @@ void yonTitleScreen() {
 void doPrompt() {
 	char ch = 0;
 	unsigned char promptPtr = 0;
+	char num[3];
 	memset(input, 0, PROMPT_CAP);
 	gotoxy(0, SCREEN_HEIGHT-2);
 	puts("What wouldst thou deau?");
@@ -47,13 +48,15 @@ void doPrompt() {
 		ch = cgetc();
 		if(ch == 10 || ch == 13)
 			break; // new line
-		if(ch == 8 && promptPtr > 0) {
+		if(ch == 8) {
 			// backspace, decrement the prompt position and draw a space over where the character was
-			input[--promptPtr] = 0;
-			cputc(' ');
-			gotox(promptPtr+1);
-			cputc(' ');
-			gotox(promptPtr+1);
+			if(promptPtr > 0) {
+				input[--promptPtr] = 0;
+				cputc(' ');
+				gotox(promptPtr+1);
+				cputc(' ');
+				gotox(promptPtr+1);
+			}
 		} else {
 			input[promptPtr++] = ch;
 			cputc(ch);
