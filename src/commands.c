@@ -17,7 +17,7 @@ unsigned char doGet() {
 					"You cannot get the FLASK. It is firmly bolted to a wall which is firmly bolted to "
 					"the rest of the dungeon which is probably bolted to a castle. Never you mind."
 				);
-				return 0;
+				return 1;
 			} else {
 				score -= 1000;
 				printf(
@@ -27,7 +27,7 @@ unsigned char doGet() {
 					"Your score was %d", score
 				);
 				SET_FLAG(FLAG_DEAD);
-				return 0;
+				return 1;
 			}
 		} else if(strcmp("scroll", getting) == 0) {
 			if(GET_FLAG(FLAG_SCROLL)) {
@@ -43,7 +43,7 @@ unsigned char doGet() {
 				);
 				score += 2;
 			}
-			return 0;
+			return 1;
 		}
 		break;
 	case LOCATION_NORTH:
@@ -54,7 +54,7 @@ unsigned char doGet() {
 		break;
 	}
 
-	return 1;
+	return 0;
 }
 
 

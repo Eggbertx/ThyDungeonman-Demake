@@ -67,14 +67,14 @@ unsigned char parsePrompt() {
 	strlower(input);
 	CLEAR();
 	if(strncmp("get ", input, 4) == 0) {
-		if(doGet()) {
+		if(!doGet()) {
 			puts("Thou cannotst get that. Quit making stuffeth up!");
 		}
 		return GET_FLAG(FLAG_DEAD)?0:1;
 	}
 
 	if(strncmp("go ", input, 3) == 0) {
-		if(doGo()) {
+		if(!doGo()) {
 			puts("Thou cannotst go there. Who do thou think thou art? A magistrate?!");
 		}
 		return 1;
