@@ -7,4 +7,6 @@ void doGoOrLook(unsigned char newLoc);
 
 unsigned char doGet();
 
+unsigned char doTalk(char* talkTo);
+
 #endif

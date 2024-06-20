@@ -36,7 +36,6 @@ void yonTitleScreen() {
 void doPrompt() {
 	char ch = 0;
 	unsigned char promptPtr = 0;
-	char num[3];
 	memset(input, 0, PROMPT_CAP);
 	gotoxy(0, SCREEN_HEIGHT-2);
 	puts("What wouldst thou deau?");
@@ -95,6 +94,16 @@ unsigned char parsePrompt() {
 		return 1;
 	}
 
+	if(strncmp("talk ", input, 5) == 0) {
+		if(doTalk(input + 5))
+			return 1;
+	}
+
+	if(strncmp("talk", input, 4) == 0) {
+		if(doTalk(input + 4))
+			return 1;
+	}
+
 	if(strcmp("not dennis", input) == 0 && location == LOCATION_DENNIS) {
 		// for compatibility with the main game, since "go dennis" works but "go not dennis" doesn't for some reason
 		doGoOrLook(LOCATION_DUNGEON);
@@ -111,7 +120,6 @@ unsigned char parsePrompt() {
 		return 1;
 	}
 
-invalid:
 	puts("That does not computeth. Type HELP if thou needs of it.");
 	return 1;
 }

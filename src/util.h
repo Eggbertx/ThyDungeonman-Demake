@@ -25,6 +25,7 @@
 #define THING_ROPE 5
 #define THING_FLASK 6
 #define THING_SCROLL 7
+#define THING_TRINKET 8
 
 #define FLAG_STARTED 1
 #define FLAG_DEAD 2

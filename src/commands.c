@@ -51,9 +51,30 @@ unsigned char doGet() {
 		}
 		break;
 	case LOCATION_NORTH:
-		break;
+		if(strcmp("rope", getting) == 0) {
+			printf(
+				"You attempt to take ye ROPE but alas it is enchanted! It glows a mustard red and smells like a public privy. "
+				"The ROPE wraps round your neck and hangs you from parapets. With your last breath, you wonder what parapets are.\n"
+				"Your score was %d", --score
+			);
+			SET_FLAG(FLAG_DEAD);
+			return 1;
+		}
 	case LOCATION_SOUTH:
-		break;
+		if(strcmp("trinket", getting) == 0) {
+			if(GET_FLAG(FLAG_BAUBEL)) {
+				puts("Sigh. The trinket is in thou pouchel. Recallest thou?");
+				score--;
+			} else {
+				puts(
+					"Ye getsts yon TRINKET and discover it to be a bauble. You rejoice at your good fortune. You shove the TRINKET "
+					"in your pouchel. It kinda hurts."
+				);
+				score += 2;
+				SET_FLAG(FLAG_BAUBEL);
+			}
+			return 1;
+		}
 	case LOCATION_DENNIS:
 		break;
 	}
@@ -124,13 +145,36 @@ void lookAt(unsigned char thing) {
 			"Ye seeth nothing wheretofore it went ZAP.":
 			"Parchment, definitely parchment. I'd recognize it anywhere.");
 		break;
+	case THING_TRINKET:
+		puts(GET_FLAG(FLAG_BAUBEL)?
+			"Just a bulge in thou pouchel at this point.":
+			"Quit looking! Just get it already."
+		);
+		break;
 	default:
 		puts("It looketh pretty awesome.");
 		break;
 	}
 }
 
-// if newLoc == location, look was used, otherwise go <location> was used
+unsigned char doTalk(char* talkTo) {
+	unsigned char noSubject = strlen(talkTo) == 0;
+	CLEAR();
+	if(location == LOCATION_DENNIS && (noSubject || strcmp("dennis", talkTo) == 0)) {
+		puts(
+			"You engage Dennis in leisurely discussion. Ye learns that his jimberjam was purchased on sale at a discount "
+			"market and that he enjoys pacing about nervously. You become bored and begin thinking about parapets."
+		);
+		return 1;
+	}
+	if(!noSubject) {
+		printf("Who is \"%s\"? Your new boyfriend?! Someone at work you don't want me to meeteth?!", talkTo);
+		return 1;
+	}
+	return 0;
+}
+
+// if newLoc == location, look was used, otherwise go <newLoc> was used
 void doGoOrLook(unsigned char newLoc) {
 	CLEAR();
 	switch(newLoc) {
@@ -159,6 +203,26 @@ void doGoOrLook(unsigned char newLoc) {
 			"Ye thou now be at parapets. ":
 			"You go NORTH through yon corridor. You arrive at parapets. ");
 		puts("Ye see a ROPE.\nObvious exits are SOUTH.");
+		break;
+	case LOCATION_SOUTH:
+		if(location == newLoc) {
+			puts(GET_FLAG(FLAG_BAUBEL)?
+				"Ye stand high above a canyon-like depression.":
+				"Ye stand yeself close to a yet-unnamed escarpment. Nonetheless, ye spies a TRINKET."
+			);
+		} else {
+			puts(
+				"You head south to an embankment. Or maybe a chasm. You can't decide which. "
+				"Anyway, ye spies a TRINKET."
+			);
+		}
+		puts("Obvious exits are NORTH.");
+		break;
+	case LOCATION_DENNIS:
+		puts(
+			"Ye arrive at Dennis. He wears a sporty frock coat and a long jimberjam. He paces about nervously. "
+			"Obvious exits are NOT DENNIS"
+		);
 		break;
 	default:
 		break;
