@@ -89,6 +89,11 @@ unsigned char parsePrompt() {
 		return 0;
 	}
 
+	if(strncmp("look ", input, 5) == 0) {
+		doLook(input + 5);
+		return 1;
+	}
+
 	if(strcmp("look", input) == 0 || strcmp("help", input) == 0) {
 		doGoOrLook(location);
 		return 1;

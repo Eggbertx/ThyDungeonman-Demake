@@ -229,3 +229,33 @@ void doGoOrLook(unsigned char newLoc) {
 	}
 	location = newLoc;
 }
+
+void doLook(char* thing) {
+	switch (location) {
+	case LOCATION_DUNGEON:
+		if(strcmp("flask", thing) == 0) {
+			lookAt(THING_FLASK);
+			return;
+		} else if(strcmp("scroll", thing) == 0) {
+			lookAt(THING_SCROLL);
+			return;
+		}
+		break;
+	case LOCATION_NORTH:
+		if(strcmp("rope", thing) == 0) {
+			lookAt(THING_ROPE);
+			return;
+		} else if(strcmp("parapets", thing) == 0) {
+			lookAt(THING_PARAPETS);
+			return;
+		}
+		break;
+	case LOCATION_SOUTH:
+		break;
+	case LOCATION_DENNIS:
+		break;
+	default:
+		break;
+	}
+	lookAt(THING_UNKNOWN);
+}
