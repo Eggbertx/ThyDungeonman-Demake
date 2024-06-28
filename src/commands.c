@@ -4,11 +4,15 @@
 #include "commands.h"
 #include "util.h"
 
-unsigned char doGet() {
-	char* getting = input + 4;
-
+unsigned char doGet(char* getting) {
 	if(strcmp("graphics", getting) == 0) {
 		puts("Graphics shmaphics...for sooth!");
+		return 1;
+	}
+
+	if(strcmp("dagger", getting) == 0) {
+		puts("Yeah, okay.");
+		score += 25;
 		return 1;
 	}
 
@@ -82,6 +86,19 @@ unsigned char doGet() {
 	return 0;
 }
 
+void doGive(char* giving) {
+	if(strcmp("trinket", giving) == 0 && location == LOCATION_DENNIS && GET_FLAG(FLAG_BAUBEL)) {
+		puts(
+			"A novel idea! You givst the TRINKET to Dennis and he happily agrees to tell you what parapets are. "
+			"With this new knowledge, ye escapes from yon dungeon in order to search for new dungeons and to remain...\n\n"
+			"THY DUNGEONMAN!!\nYou hath won! Congraturation!"
+		);
+		printf("Your score was %d\n", score);
+		SET_FLAG(FLAG_DEAD);
+	} else {
+		printf("Thou doesn'tst have a %s to give. Go back to your tiny life.", giving);
+	}
+}
 
 unsigned char doGo() {
 	char* goingTo = input + 3;

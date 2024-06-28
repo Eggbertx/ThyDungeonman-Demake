@@ -69,10 +69,29 @@ unsigned char parsePrompt() {
 	strlower(input);
 	CLEAR();
 
-	if(strncmp("get ", input, 4) == 0) {
-		if(!doGet()) {
+	if(strncmp("get the ", input, 8) == 0) {
+		if(!doGet(input + 8)) {
 			puts("Thou cannotst get that. Quit making stuffeth up!");
 		}
+		return GET_FLAG(FLAG_DEAD)?0:1;
+	}
+
+	if(strncmp("get ye ", input, 7) == 0) {
+		if(!doGet(input + 7)) {
+			puts("Thou cannotst get that. Quit making stuffeth up!");
+		}
+		return GET_FLAG(FLAG_DEAD)?0:1;
+	}
+
+	if(strncmp("get ", input, 4) == 0) {
+		if(!doGet(input + 4)) {
+			puts("Thou cannotst get that. Quit making stuffeth up!");
+		}
+		return GET_FLAG(FLAG_DEAD)?0:1;
+	}
+
+	if(strncmp("give ", input, 5) == 0) {
+		doGive(input + 5);
 		return GET_FLAG(FLAG_DEAD)?0:1;
 	}
 
@@ -89,6 +108,16 @@ unsigned char parsePrompt() {
 		return 0;
 	}
 
+	if(strncmp("look at the ", input, 12) == 0) {
+		doLook(input + 12);
+		return 1;
+	}
+
+	if(strncmp("look at ", input, 8) == 0) {
+		doLook(input + 8);
+		return 1;
+	}
+
 	if(strncmp("look ", input, 5) == 0) {
 		doLook(input + 5);
 		return 1;
@@ -97,6 +126,11 @@ unsigned char parsePrompt() {
 	if(strcmp("look", input) == 0 || strcmp("help", input) == 0) {
 		doGoOrLook(location);
 		return 1;
+	}
+
+	if(strncmp("talk to ", input, 5) == 0) {
+		if(doTalk(input + 8))
+			return 1;
 	}
 
 	if(strncmp("talk ", input, 5) == 0) {
